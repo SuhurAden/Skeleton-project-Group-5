@@ -7,10 +7,10 @@ from flask import current_app
 
 # internal imports
 from codeapp import db
-from codeapp.models import Dummy
+from codeapp.models import Jobs
 
 
-def get_data_list() -> list[Dummy]:
+def get_data_list() -> list[Jobs]:
     """
     Function responsible for downloading the dataset from the source, translating it
     into a list of Python objects, and saving it to a Redis list.
@@ -19,7 +19,7 @@ def get_data_list() -> list[Dummy]:
     pass
 
 
-def calculate_statistics(dataset: list[Dummy]) -> dict[int | str, int]:
+def calculate_statistics(dataset: list[Jobs]) -> dict[int | str, int]:
     """
     Receives the dataset in the form of a list of Python objects, and calculates the
     statistics necessary.
