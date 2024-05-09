@@ -55,10 +55,10 @@ def get_data_list() -> list[Jobs]:
             title=item["Title"],
             company=item["Company"],
             location=item["Location"],
-            position_type=item["Position_type"],
-            job_description=item["Job_description"],
+            position_type=item["Type of Positions"],
+            job_description=item["Job Description"],
             salary=item["Salary"],
-            identified_skills=item["Identified_skills"],
+            identified_skills=item["Identified_Skills"],
         )
         db.rpush("dataset_list", pickle.dumps(new_job))
         dataset_base.append(new_job)  # append to the list
