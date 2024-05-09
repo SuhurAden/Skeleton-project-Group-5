@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 from werkzeug.wrappers.response import Response as WerkzeugResponse
 
 # internal imports
-import codeapp.models as models
+import codeapp.models as Jobs
 from codeapp.utils import calculate_statistics, get_data_list, prepare_figure
 
 # define the response type
@@ -28,16 +28,43 @@ bp = Blueprint("bp", __name__, url_prefix="/")
 
 @bp.get("/")  # root route
 def home() -> Response:
-    # TODO: create here the route that renders the home.html file
-    pass
+    dataset: list[Jobs] = get_data_list()
+
+    # get the statistics that is supposed to be shown
+    counter: dict[str, int] = calculate_statistics(dataset)
+
+    # render the page
+    return render_template("home.html", counter=counter)
 
 
 @bp.get("/image")
 def image() -> Response:
+    # gets dataset
+    dataset: list[Jobs] = get_data_list()
+
+    # get the statistics that is supposed to be shown
+    counter: dict[str, int] = calculate_statistics(dataset)
+
     # creating the plot
     fig = Figure()
-
-    # TODO: populate the plot in this part of the code
+    fig.gca().bar(
+        list(sorted(counter.keys()))[:15],
+        [counter[x] for x in sorted(counter.keys())[:15]],
+        color="gray",
+        alpha=0.5,
+        zorder=2,
+    )
+    fig.gca().plot(
+        list(sorted(counter.keys()))[:15],
+        [counter[x] for x in sorted(counter.keys())[:15]],
+        marker="x",
+        color="#25a848",
+        zorder=3,
+    )
+    fig.gca().grid(ls=":", zorder=1)
+    fig.gca().set_xlabel("Skill")
+    fig.gca().set_ylabel("Number of jobs")
+    fig.tight_layout()
 
     ################ START -  THIS PART MUST NOT BE CHANGED BY STUDENTS ################
     # create a string buffer to hold the final code for the plot
@@ -50,8 +77,10 @@ def image() -> Response:
 
 @bp.get("/data")  # data route
 def data() -> Response:
-    # TODO: create here the route that renders the data.html file
-    pass
+    # gets dataset
+    dataset: list[Jobs] = get_data_list()
+
+    return render_template("data.html", data=dataset[0:10])
 
 
 @bp.get("/about")
@@ -64,11 +93,20 @@ def about() -> Response:
 
 @bp.get("/json-dataset")
 def get_json_dataset() -> Response:
-    # TODO
-    pass
+    # gets dataset
+    dataset: list[Jobs] = get_data_list()
+
+    # render the page
+    return jsonify(dataset)
 
 
 @bp.get("/json-stats")
 def get_json_stats() -> Response:
-    # TODO
-    pass
+    # gets dataset
+    dataset: list[Jobs] = get_data_list()
+
+    # get the statistics that is supposed to be shown
+    counter: dict[str, int] = calculate_statistics(dataset)
+
+    # render the page
+    return jsonify(counter)

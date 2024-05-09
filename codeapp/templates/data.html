@@ -1,9 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
 <h1 id="homepage_header">Full data</h1>
-<h2>Full data</h2>
-
-<!-- TODO -->
-<h2>Insert your full data table here!</h2>
-
+<h2>Full data from AI and ML jobs, sorted in number of jobs per skill</h2>
+<div class="table-responsive">
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Type of Position</th>
+            <th>Job Description</th>
+            <th>Salary</th>
+            <th>Identified Skills</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data|sort(attribute='skills', reverse=True) %}
+            <tr>
+                <td>{{ item.title }}</td>
+                <td>{{ item.company }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.position_type }}</td>
+                <td>{{ item.job_desription }}</td>
+                <td>{{ item.salary }}</td>
+                <td>{{ item.identified_skills }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
 {% endblock content %}

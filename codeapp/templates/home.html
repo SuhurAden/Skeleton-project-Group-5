@@ -2,9 +2,22 @@
 {% block content %}
 <h1 id="homepage_header">Final project</h1>
 <h2>Statistics</h2>
-
-<!-- TODO -->
-<h2>Insert your table here!</h2>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Skill</th>
+            <th>Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for skill, count in counter.items()|sort(attribute='0')%}
+            <tr>
+                <td>{{ skill }}</td>
+                <td>{{ count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <img src="{{ url_for('bp.image') }}" class="rounded mx-auto d-block" alt="Plot with analysis">
 
