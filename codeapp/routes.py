@@ -51,13 +51,6 @@ def image() -> Response:
 
     # creating the plot
     fig = Figure()
-    # fig.gca().bar(
-    #     [x[0] for x in sorted_jobs][:15],
-    #     [x[1] for x in sorted_jobs][:15],
-    #     color="gray",
-    #     alpha=0.5,
-    #     zorder=2,
-    # )
 
     vert = [x[0] for x in sorted_jobs][:15]
     horz = [x[1] for x in sorted_jobs][:15]

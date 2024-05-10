@@ -40,12 +40,6 @@ def get_data_list() -> list[Jobs]:
     dataset_base: list[Jobs] = []  # list to store the items
     # for each item in the dataset...
     for item in response.json():
-        # check if the date can be parsed
-        # date_added: date | None = None
-        # try:
-        # date_added = datetime.strptime(item["date_added"], "%B %d, %Y").date()
-        # except Exception:
-        # pass
 
         new_job = Jobs(
             title=item["Title"],
