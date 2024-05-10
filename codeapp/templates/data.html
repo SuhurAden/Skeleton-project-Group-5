@@ -16,18 +16,18 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in data|sort(attribute='skills', reverse=True) %}
+        {% for item in data|sort(attribute='identified_skills', reverse=True) %}
             <tr>
                 <td>{{ item.title }}</td>
                 <td>{{ item.company }}</td>
                 <td>{{ item.location }}</td>
                 <td>{{ item.position_type }}</td>
-                <td>{{ item.job_desription }}</td>
+                <td>{{ item.job_description }}</td>
                 <td>{{ item.salary }}</td>
                 <td>{{ item.identified_skills }}</td>
             </tr>
         {% endfor %}
     </tbody>
-</table>
+</table> 
 </div>
 {% endblock content %}

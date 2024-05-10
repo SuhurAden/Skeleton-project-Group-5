@@ -10,9 +10,9 @@
         </tr>
     </thead>
     <tbody>
-        {% for skill, count in counter.items()|sort(attribute='0')%}
+        {% for job, count in  counter %}
             <tr>
-                <td>{{ skill }}</td>
+                <td>{{ job }}</td>
                 <td>{{ count }}</td>
             </tr>
         {% endfor %}

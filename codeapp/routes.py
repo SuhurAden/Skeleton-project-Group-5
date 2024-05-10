@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 from werkzeug.wrappers.response import Response as WerkzeugResponse
 
 # internal imports
-import codeapp.models as Jobs
+from codeapp.models import Jobs
 from codeapp.utils import calculate_statistics, get_data_list, prepare_figure
 
 # define the response type
@@ -33,8 +33,10 @@ def home() -> Response:
     # get the statistics that is supposed to be shown
     counter: dict[str, int] = calculate_statistics(dataset)
 
+    sorted_jobs = sorted(counter.items(), key=lambda y: y[1], reverse=True)
+
     # render the page
-    return render_template("home.html", counter=counter)
+    return render_template("home.html", counter=sorted_jobs)
 
 
 @bp.get("/image")
@@ -45,25 +47,35 @@ def image() -> Response:
     # get the statistics that is supposed to be shown
     counter: dict[str, int] = calculate_statistics(dataset)
 
+    sorted_jobs = sorted(counter.items(), key=lambda y: y[1], reverse=True)
+
     # creating the plot
     fig = Figure()
-    fig.gca().bar(
-        list(sorted(counter.keys()))[:15],
-        [counter[x] for x in sorted(counter.keys())[:15]],
+    # fig.gca().bar(
+    #     [x[0] for x in sorted_jobs][:15],
+    #     [x[1] for x in sorted_jobs][:15],
+    #     color="gray",
+    #     alpha=0.5,
+    #     zorder=2,
+    # )
+
+    vert = [x[0] for x in sorted_jobs][:15]
+    horz = [x[1] for x in sorted_jobs][:15]
+
+    vert.reverse()
+    horz.reverse()
+
+    fig.gca().barh(
+        vert,
+        horz,
         color="gray",
         alpha=0.5,
         zorder=2,
     )
-    fig.gca().plot(
-        list(sorted(counter.keys()))[:15],
-        [counter[x] for x in sorted(counter.keys())[:15]],
-        marker="x",
-        color="#25a848",
-        zorder=3,
-    )
+
     fig.gca().grid(ls=":", zorder=1)
-    fig.gca().set_xlabel("Skill")
-    fig.gca().set_ylabel("Number of jobs")
+    fig.gca().set_xlabel("Number of jobs")
+    fig.gca().set_ylabel("Skills")
     fig.tight_layout()
 
     ################ START -  THIS PART MUST NOT BE CHANGED BY STUDENTS ################
@@ -80,7 +92,11 @@ def data() -> Response:
     # gets dataset
     dataset: list[Jobs] = get_data_list()
 
-    return render_template("data.html", data=dataset[0:10])
+    # Shorten job descriptions to 100 characters.
+    for job in dataset:
+        job.job_description = job.job_description[:100] + "..."
+
+    return render_template("data.html", data=dataset[:15])
 
 
 @bp.get("/about")
@@ -106,7 +122,7 @@ def get_json_stats() -> Response:
     dataset: list[Jobs] = get_data_list()
 
     # get the statistics that is supposed to be shown
-    counter: dict[str, int] = calculate_statistics(dataset)
+    counter: dict[int, int] = calculate_statistics(dataset)
 
     # render the page
     return jsonify(counter)

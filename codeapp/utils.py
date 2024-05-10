@@ -13,6 +13,8 @@ from nbformat import from_dict
 import requests
 from typing import List
 
+import ast
+
 # internal imports
 from codeapp import db
 from codeapp.models import Jobs
@@ -59,7 +61,8 @@ def get_data_list() -> list[Jobs]:
             job_description=item["Job Description"],
             salary=item["Salary"],
             identified_skills=item["Identified_Skills"],
-        )
+        )  # actually vi behöver inte ändra här, vi kan fixa det i calculate_statistics istället det blir enklare
+
         db.rpush("dataset_list", pickle.dumps(new_job))
         dataset_base.append(new_job)  # append to the list
 
@@ -71,9 +74,12 @@ def calculate_statistics(dataset: list[Jobs]) -> dict[int | str, int]:
     Receives the dataset in the form of a list of Python objects, and calculates the
     statistics necessary.
     """
-    counter: dict[str, int] = collections.defaultdict(lambda: 0)
+
+    counter: dict[str, int] = collections.defaultdict(int)
+
     for item in dataset:
-        counter[item.position_type] += 1
+        for skill in ast.literal_eval(item.identified_skills):
+            counter[skill] += 1
 
     return counter
 
