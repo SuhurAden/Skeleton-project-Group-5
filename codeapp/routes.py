@@ -31,7 +31,7 @@ def home() -> Response:
     dataset: list[Jobs] = get_data_list()
 
     # get the statistics that is supposed to be shown
-    counter: dict[str, int] = calculate_statistics(dataset)
+    counter: dict[int | str, int] = calculate_statistics(dataset)
 
     sorted_jobs = sorted(counter.items(), key=lambda y: y[1], reverse=True)
 
@@ -45,7 +45,7 @@ def image() -> Response:
     dataset: list[Jobs] = get_data_list()
 
     # get the statistics that is supposed to be shown
-    counter: dict[str, int] = calculate_statistics(dataset)
+    counter: dict[int | str, int] = calculate_statistics(dataset)
 
     sorted_jobs = sorted(counter.items(), key=lambda y: y[1], reverse=True)
 
@@ -122,7 +122,7 @@ def get_json_stats() -> Response:
     dataset: list[Jobs] = get_data_list()
 
     # get the statistics that is supposed to be shown
-    counter: dict[int, int] = calculate_statistics(dataset)
+    counter: dict[int | str, int] = calculate_statistics(dataset)
 
     # render the page
     return jsonify(counter)

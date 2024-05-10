@@ -1,19 +1,13 @@
 # built-in imports
 # standard library imports
-from datetime import date, datetime
+import ast
 import collections
-import json
-import math
 import pickle
-from dataclasses import dataclass
+
+import requests
 
 # external imports
 from flask import current_app
-from nbformat import from_dict
-import requests
-from typing import List
-
-import ast
 
 # internal imports
 from codeapp import db
@@ -47,11 +41,11 @@ def get_data_list() -> list[Jobs]:
     # for each item in the dataset...
     for item in response.json():
         # check if the date can be parsed
-        date_added: date | None = None
-        try:
-            date_added = datetime.strptime(item["date_added"], "%B %d, %Y").date()
-        except Exception:
-            pass
+        # date_added: date | None = None
+        # try:
+        # date_added = datetime.strptime(item["date_added"], "%B %d, %Y").date()
+        # except Exception:
+        # pass
 
         new_job = Jobs(
             title=item["Title"],
@@ -61,7 +55,7 @@ def get_data_list() -> list[Jobs]:
             job_description=item["Job Description"],
             salary=item["Salary"],
             identified_skills=item["Identified_Skills"],
-        )  # actually vi behöver inte ändra här, vi kan fixa det i calculate_statistics istället det blir enklare
+        )
 
         db.rpush("dataset_list", pickle.dumps(new_job))
         dataset_base.append(new_job)  # append to the list
@@ -75,7 +69,7 @@ def calculate_statistics(dataset: list[Jobs]) -> dict[int | str, int]:
     statistics necessary.
     """
 
-    counter: dict[str, int] = collections.defaultdict(int)
+    counter: dict[int | str, int] = collections.defaultdict(int)
 
     for item in dataset:
         for skill in ast.literal_eval(item.identified_skills):
