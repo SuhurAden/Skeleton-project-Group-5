@@ -1,5 +1,6 @@
 # built-in imports
 # standard library imports
+import ast
 import collections
 import pickle
 
@@ -39,6 +40,7 @@ def get_data_list() -> list[Jobs]:
     dataset_base: list[Jobs] = []  # list to store the items
     # for each item in the dataset..
     for item in response.json():
+        identified_skills = item.get("Identified_Skills", [])
 
         new_job = Jobs(
             title=item["Title"],
@@ -46,8 +48,8 @@ def get_data_list() -> list[Jobs]:
             location=item["Location"],
             position_type=item["Type of Positions"],
             job_description=item["Job Description"],
-            salary=float(item["Salary"]),
-            identified_skills=["Identified_Skills"],
+            salary=item["Salary"],
+            identified_skills=identified_skills,
         )
 
         db.rpush("dataset_list", pickle.dumps(new_job))
@@ -65,8 +67,12 @@ def calculate_statistics(dataset: list[Jobs]) -> dict[int | str, int]:
     counter: dict[int | str, int] = collections.defaultdict(int)
 
     for item in dataset:
-        for skill in item.identified_skills:
+        for skill in ast.literal_eval(item.identified_skills):
             counter[skill] += 1
+
+    # for item in dataset:
+    # for skill in item.identified_skills:
+    # counter[skill] += 1
 
     return counter
 
