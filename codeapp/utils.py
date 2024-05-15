@@ -46,8 +46,8 @@ def get_data_list() -> list[Jobs]:
             location=item["Location"],
             position_type=item["Type of Positions"],
             job_description=item["Job Description"],
-            salary=item["Salary"],
-            identified_skills=item["Identified_Skills"],
+            salary=float(item["Salary"]),
+            identified_skills=["Identified_Skills"],
         )
 
         db.rpush("dataset_list", pickle.dumps(new_job))
