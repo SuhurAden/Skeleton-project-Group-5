@@ -40,7 +40,6 @@ def get_data_list() -> list[Jobs]:
     dataset_base: list[Jobs] = []  # list to store the items
     # for each item in the dataset..
     for item in response.json():
-        identified_skills = item.get("Identified_Skills", [])
 
         new_job = Jobs(
             title=item["Title"],
@@ -49,7 +48,7 @@ def get_data_list() -> list[Jobs]:
             position_type=item["Type of Positions"],
             job_description=item["Job Description"],
             salary=item["Salary"],
-            identified_skills=identified_skills,
+            identified_skills=item["Identified_Skills"],
         )
 
         db.rpush("dataset_list", pickle.dumps(new_job))
