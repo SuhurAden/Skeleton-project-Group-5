@@ -34,6 +34,7 @@ def home() -> Response:
     counter: dict[int | str, int] = calculate_statistics(dataset)
 
     sorted_jobs = sorted(counter.items(), key=lambda y: y[1], reverse=True)
+    sorted_jobs = sorted_jobs[:15]
 
     # render the page
     return render_template("home.html", counter=sorted_jobs)
