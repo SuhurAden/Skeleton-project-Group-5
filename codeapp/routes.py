@@ -112,7 +112,7 @@ def get_json_dataset() -> Response:
 @bp.get("/json-stats")
 def get_json_stats() -> Response:
     # gets dataset
-    dataset: list[Jobs] = get_data_list()
+    dataset: list[Jobs] = get_data_list()[:15]
 
     # get the statistics that is supposed to be shown
     counter: dict[int | str, int] = calculate_statistics(dataset)
